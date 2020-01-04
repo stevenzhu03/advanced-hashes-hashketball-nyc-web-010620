@@ -104,29 +104,34 @@ def game_hash
   }
 end
     
-def num_points_scored(sought_player_name)
-  game_hash.each do |_place, team|
+def num_points_scored(players_name)
+  game_hash.each do |place, team|
     team.each do |attribute, data|
-      next unless attribute == :players
-
-      data.each do |player|
-        return player[:points] if player[:player_name] == sought_player_name
+      if attribute == :players
+        data.each do |player|
+          if player[:player_name] == players_name
+            return player[:points]
+          end
+        end
       end
     end
   end
 end
 
-def shoe_size(sought_player_name)
-  game_hash.each do |_place, team|
+def shoe_size(players_name)
+  game_hash.each do |place, team|
     team.each do |attribute, data|
-      next unless attribute == :players
-
-      data.each do |player|
-        return player[:shoe] if player[:player_name] == sought_player_name
+      if attribute == :players
+        data.each do |player|
+          if player[:player_name] == players_name
+            return player[:shoe]
+          end
+        end
       end
     end
   end
 end
+
 
 def team_colors(team_name)
   game_hash.each do |place, team|
@@ -135,21 +140,21 @@ def team_colors(team_name)
 end
 
 def team_names
-  game_hash.collect do |_place, team|
+  game_hash.collect do |place, team|
     team[:team_name]
   end
 end
 
 def player_numbers(team_name)
   nums = []
-  game_hash.each do |_place, team|
-    next unless team[:team_name] == team_name
-
-    team.each do |attribute, data|
-      next unless attribute == :players
-
-      data.each do |data|
-        nums << data[:number]
+  game_hash.each do |place, team|
+    if team[:team_name] == team_name
+      team.each do |attribute, data|
+        if attribute == :players
+          data.each do |player|
+            nums << player[:number]
+          end
+        end
       end
     end
   end
@@ -165,7 +170,7 @@ def player_stats(sought_player_name)
       game_hash[place][attribute].each do |player|
         next unless player[:player_name] == sought_player_name
 
-        new_hash = player.delete_if do |k, _v|
+        new_hash = player.delete_if do |k,v|
           k == :player_name
         end
       end
@@ -178,8 +183,8 @@ def big_shoe_rebounds
   biggest_shoe = 0
   num_rebounds = 0
 
-  game_hash.each do |_team, game_data|
-    game_data[:players].each do |player|
+  game_hash.each do |place, team|
+    team[:players].each do |player|
       if player[:shoe] > biggest_shoe
         biggest_shoe = player[:shoe]
         num_rebounds = player[:rebounds]
@@ -190,9 +195,9 @@ def big_shoe_rebounds
   num_rebounds
 end
 
-
-
-
 n
+
+
+
 
 
